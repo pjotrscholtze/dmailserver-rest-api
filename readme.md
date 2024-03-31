@@ -13,7 +13,7 @@ API has a Swagger/OpenAPI definition, both in version 2.0 and 3.0.
     - [x] List (Dovecot, Postfix, and Postfix Sasl)
     - [x] Add
     - [x] Delete
-- [x] API requests require an API key, [x] which can be configured.
+- [x] API requests require an API key, which can be configured.
 - [x] Logging is done in JSON format.
 - [x] Single executable, so can be dropped on the image and be exposed for easy usage.
 - [x] Command prefix can be given allowing it to access containers running in Docker/Podman/Kubernetes.
