@@ -1,0 +1,299 @@
+swagger: "2.0"
+info:
+  title: Docker mailserver - OpenAPI 2.0
+  version: 1.0.11
+basePath: "/api"
+schemes:
+# - "https"
+- "http"
+paths:
+  /email:
+    post:
+      tags:
+      - email
+      operationId: addEmailAccount
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: Create a new email account
+        required: true
+        schema:
+          $ref: '#/definitions/EmailAccount'
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            type: string
+        '405':
+          description: Invalid input
+        '406':
+          description: Email address already exists!
+        '500':
+          description: Internal error
+      security:
+        - api_key: []
+    get:
+      tags:
+      - email
+      operationId: listEmailAccounts
+      produces:
+      - "application/json"
+      responses:
+        '200':
+          description: Successful listing of email addresses
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/EmailAccountListItem'          
+        '500':
+          description: Internal error
+      security:
+        - api_key: []
+  /email/{emailAddress}:
+    delete:
+      tags:
+      - email
+      produces:
+      - "application/json"
+      operationId: deleteEmailAccount
+      parameters:
+      - name: emailAddress
+        in: path
+        description: Address of the email account to delete
+        required: true
+        type: string
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: Account not found
+        '405':
+          description: Invalid input
+        '500':
+          description: Internal error
+      security:
+        - api_key: []
+    put:
+      tags:
+      - email
+      produces:
+      - "application/json"
+      operationId: updateEmailAddress
+      parameters:
+      - name: emailAddress
+        in: path
+        description: Address of the email account to update
+        required: true
+        type: string
+      - in: "body"
+        name: "password"
+        description: Password for the email account
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: Account not found
+        '405':
+          description: Invalid input
+        '500':
+          description: Internal error
+      security:
+        - api_key: []
+  # /email/{emailAddress}/quota:
+  #   get:
+  #     tags:
+  #     - email
+  #     produces:
+  #     - "application/json"
+  #     operationId: getQuotaOfEmailAccount
+  #     parameters:
+  #     - name: emailAddress
+  #       in: path
+  #       description: Address of the email account to get the quota of.
+  #       required: true
+  #       type: string
+  #     responses:
+  #       '200':
+  #         description: Successful retrieval of email account quota
+  #         schema:
+  #           type: array
+  #           items:
+  #             $ref: '#/definitions/Quota'          
+  #       '404':
+  #         description: Email account not found
+  #       '500':
+  #         description: Internal error
+  #     security:
+  #       - api_key: []
+  #   delete:
+  #     tags:
+  #     - email
+  #     produces:
+  #     - "application/json"
+  #     operationId: deleteQuotaOfEmailAccount
+  #     parameters:
+  #       - name: emailAddress
+  #         in: path
+  #         description: Address of the email account to delete
+  #         required: true
+  #         type: string
+  #     responses:
+  #       '200':
+  #         description: Successful operation
+  #       '404':
+  #         description: Email account not found
+  #       '405':
+  #         description: Invalid input
+  #       '500':
+  #         description: Internal error
+  #     security:
+  #       - api_key: []
+  #   put:
+  #     tags:
+  #     - email
+  #     produces:
+  #     - "application/json"
+  #     operationId: putQuotaOfEmailAccount
+  #     parameters:
+  #     - name: emailAddress
+  #       in: path
+  #       description: Address of the email account to delete
+  #       required: true
+  #       type: string
+  #     - in: "body"
+  #       name: "quota"
+  #       description: The quota to set for this email account
+  #       schema:
+  #         type: string
+  #       required: true
+  #     responses:
+  #       '200':
+  #         description: Successful operation
+  #       '404':
+  #         description: Email account not found
+  #       '405':
+  #         description: Invalid input
+  #       '500':
+  #         description: Internal error
+  #     security:
+  #       - api_key: []
+  /fail2ban:
+    post:
+      tags:
+      - fail2ban
+      produces:
+      - "application/json"
+      operationId: postFail2banIp
+      parameters:
+      - in: "body"
+        name: "ipaddress"
+        description: IP address to add to fail2ban
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+        '405':
+          description: Invalid input
+        '500':
+          description: Internal error
+      security:
+        - api_key: []
+    get:
+      tags:
+      - fail2ban
+      produces:
+      - "application/json"
+      operationId: getFail2banIps
+      responses:
+        '200':
+          description: Successful listing of banned IPs by Fail2ban.
+          schema:
+            $ref: '#/definitions/Fail2banListItem'
+        '500':
+          description: Internal error
+      security:
+        - api_key: []
+  /fail2ban/{ip}:
+    delete:
+      tags:
+      - fail2ban
+      produces:
+      - "application/json"
+      operationId: deleteFail2banIp
+      parameters:
+      - name: ip
+        in: path
+        description: IP address to delete
+        required: true
+        type: string
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: IP was not found
+        '405':
+          description: Invalid input
+        '500':
+          description: Internal error
+      security:
+        - api_key: []
+
+definitions:
+  Fail2banListItem:
+    type: object
+    properties:
+      bannedInDovecot:
+        type: array
+        items:
+          type: string
+      bannedInPostfix:
+        type: array
+        items:
+          type: string
+      bannedInPostfixSasl:
+        type: array
+        items:
+          type: string
+  EmailAccount:
+    type: object
+    properties:
+      address:
+        type: string
+        example: example@example.com
+      password:
+        type: string
+  EmailAccountListItem:
+    type: object
+    properties:
+      address:
+        type: string
+        example: example@example.com
+      quota:
+        $ref: '#/definitions/Quota'
+      aliases:
+        type: array
+        items:
+          type: string
+  Quota:
+    type: object
+    properties:
+      usage:
+        type: string
+      limit:
+        type: string
+      usagePercentage:
+        type: string
+  principal:
+    type: string
+securityDefinitions:
+  api_key:
+    type: apiKey
+    name: X-API-Key
+    in: header 

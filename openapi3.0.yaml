@@ -1,0 +1,270 @@
+openapi: 3.0.3
+info:
+  title: Docker mailserver - OpenAPI 3.0
+  version: 1.0.11
+paths:
+  /email:
+    post:
+      operationId: addEmailAccount
+      requestBody:
+        description: Create a new email account
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailAccount'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: string
+        '405':
+          description: Invalid input
+        '406':
+          description: Email address already exists!
+        '500':
+          description: Internal error
+      security:
+        - api_key: []
+    get:
+      operationId: listEmailAccounts
+      responses:
+        '200':
+          description: Successful listing of email addresses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EmailAccountListItem'          
+        '500':
+          description: Internal error
+      security:
+        - api_key: []
+  /email/{emailAddress}:
+    delete:
+      operationId: deleteEmailAccount
+      parameters:
+        - name: emailAddress
+          in: path
+          description: Address of the email account to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: Account not found
+        '405':
+          description: Invalid input
+        '500':
+          description: Internal error
+      security:
+        - api_key: []
+    put:
+      operationId: updateEmailAddress
+      parameters:
+        - name: emailAddress
+          in: path
+          description: Address of the email account to update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Password for the email account
+        content:
+          application/json:
+            schema:
+              type: string
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: Account not found
+        '405':
+          description: Invalid input
+        '500':
+          description: Internal error
+      security:
+        - api_key: []
+  # /email/{emailAddress}/quota:
+  #   get:
+  #     operationId: getQuotaOfEmailAccount
+  #     parameters:
+  #       - name: emailAddress
+  #         in: path
+  #         description: Address of the email account to get the quota of.
+  #         required: true
+  #         schema:
+  #           type: string
+  #     responses:
+  #       '200':
+  #         description: Successful retrieval of email account quota
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type: array
+  #               items:
+  #                 $ref: '#/components/schemas/Quota'          
+  #       '404':
+  #         description: Email account not found
+  #       '500':
+  #         description: Internal error
+  #     security:
+  #       - api_key: []
+  #   delete:
+  #     operationId: deleteQuotaOfEmailAccount
+  #     parameters:
+  #       - name: emailAddress
+  #         in: path
+  #         description: Address of the email account to delete
+  #         required: true
+  #         schema:
+  #           type: string
+  #     responses:
+  #       '200':
+  #         description: Successful operation
+  #       '404':
+  #         description: Email account not found
+  #       '405':
+  #         description: Invalid input
+  #       '500':
+  #         description: Internal error
+  #     security:
+  #       - api_key: []
+  #   put:
+  #     operationId: putQuotaOfEmailAccount
+  #     parameters:
+  #       - name: emailAddress
+  #         in: path
+  #         description: Address of the email account to delete
+  #         required: true
+  #         schema:
+  #           type: string
+  #     requestBody:
+  #       description: The quota to set for this email account
+  #       content:
+  #         application/json:
+  #           schema:
+  #             type: string
+  #       required: true
+  #     responses:
+  #       '200':
+  #         description: Successful operation
+  #       '404':
+  #         description: Email account not found
+  #       '405':
+  #         description: Invalid input
+  #       '500':
+  #         description: Internal error
+  #     security:
+  #       - api_key: []
+  /fail2ban:
+    post:
+      operationId: postFail2banIp
+      requestBody:
+        description: IP address to add to fail2ban
+        content:
+          application/json:
+            schema:
+              type: string
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+        '405':
+          description: Invalid input
+        '500':
+          description: Internal error
+      security:
+        - api_key: []
+    get:
+      operationId: getFail2banIps
+      responses:
+        '200':
+          description: Successful listing of banned IPs by Fail2ban.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Fail2banListItem'
+        '500':
+          description: Internal error
+      security:
+        - api_key: []
+  /fail2ban/{ip}:
+    delete:
+      operationId: deleteFail2banIp
+      parameters:
+        - name: ip
+          in: path
+          description: IP address to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: IP was not found
+        '405':
+          description: Invalid input
+        '500':
+          description: Internal error
+      security:
+        - api_key: []
+
+components:
+  schemas:
+    Fail2banListItem:
+      type: object
+      properties:
+        bannedInDovecot:
+          type: array
+          items:
+            type: string
+        bannedInPostfix:
+          type: array
+          items:
+            type: string
+        bannedInPostfixSasl:
+          type: array
+          items:
+            type: string
+    EmailAccount:
+      type: object
+      properties:
+        address:
+          type: string
+          example: example@example.com
+        password:
+          type: string
+    EmailAccountListItem:
+      type: object
+      properties:
+        address:
+          type: string
+          example: example@example.com
+        quota:
+          $ref: '#/components/schemas/Quota'
+        aliases:
+          type: array
+          items:
+            type: string
+    Quota:
+      type: object
+      properties:
+        usage:
+          type: string
+        limit:
+          type: string
+        usagePercentage:
+          type: string
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: X-API-Key
+      in: header
