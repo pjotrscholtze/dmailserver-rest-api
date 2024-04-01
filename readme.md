@@ -5,9 +5,12 @@ API has a Swagger/OpenAPI definition, both in version 2.0 and 3.0.
 ## Features
 - [x] API
   - [x] Email
-    - [x] List (including Quota)
+    - [x] List (including quota, aliasses) 
     - [x] Create
     - [x] Update
+    - [x] Delete
+  - [x] Alias
+    - [x] Create
     - [x] Delete
   - [x] Fail2ban
     - [x] List (Dovecot, Postfix, and Postfix Sasl)

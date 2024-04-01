@@ -48,8 +48,14 @@ func NewDmailserverRestAPIAPI(spec *loads.Document) *DmailserverRestAPIAPI {
 		EmailAddEmailAccountHandler: email.AddEmailAccountHandlerFunc(func(params email.AddEmailAccountParams, principal interface{}) middleware.Responder {
 			return middleware.NotImplemented("operation email.AddEmailAccount has not yet been implemented")
 		}),
+		EmailAddEmailAliasHandler: email.AddEmailAliasHandlerFunc(func(params email.AddEmailAliasParams, principal interface{}) middleware.Responder {
+			return middleware.NotImplemented("operation email.AddEmailAlias has not yet been implemented")
+		}),
 		EmailDeleteEmailAccountHandler: email.DeleteEmailAccountHandlerFunc(func(params email.DeleteEmailAccountParams, principal interface{}) middleware.Responder {
 			return middleware.NotImplemented("operation email.DeleteEmailAccount has not yet been implemented")
+		}),
+		EmailDeleteEmailAliasHandler: email.DeleteEmailAliasHandlerFunc(func(params email.DeleteEmailAliasParams, principal interface{}) middleware.Responder {
+			return middleware.NotImplemented("operation email.DeleteEmailAlias has not yet been implemented")
 		}),
 		Fail2banDeleteFail2banIPHandler: fail2ban.DeleteFail2banIPHandlerFunc(func(params fail2ban.DeleteFail2banIPParams, principal interface{}) middleware.Responder {
 			return middleware.NotImplemented("operation fail2ban.DeleteFail2banIP has not yet been implemented")
@@ -118,8 +124,12 @@ type DmailserverRestAPIAPI struct {
 
 	// EmailAddEmailAccountHandler sets the operation handler for the add email account operation
 	EmailAddEmailAccountHandler email.AddEmailAccountHandler
+	// EmailAddEmailAliasHandler sets the operation handler for the add email alias operation
+	EmailAddEmailAliasHandler email.AddEmailAliasHandler
 	// EmailDeleteEmailAccountHandler sets the operation handler for the delete email account operation
 	EmailDeleteEmailAccountHandler email.DeleteEmailAccountHandler
+	// EmailDeleteEmailAliasHandler sets the operation handler for the delete email alias operation
+	EmailDeleteEmailAliasHandler email.DeleteEmailAliasHandler
 	// Fail2banDeleteFail2banIPHandler sets the operation handler for the delete fail2ban Ip operation
 	Fail2banDeleteFail2banIPHandler fail2ban.DeleteFail2banIPHandler
 	// Fail2banGetFail2banIpsHandler sets the operation handler for the get fail2ban ips operation
@@ -214,8 +224,14 @@ func (o *DmailserverRestAPIAPI) Validate() error {
 	if o.EmailAddEmailAccountHandler == nil {
 		unregistered = append(unregistered, "email.AddEmailAccountHandler")
 	}
+	if o.EmailAddEmailAliasHandler == nil {
+		unregistered = append(unregistered, "email.AddEmailAliasHandler")
+	}
 	if o.EmailDeleteEmailAccountHandler == nil {
 		unregistered = append(unregistered, "email.DeleteEmailAccountHandler")
+	}
+	if o.EmailDeleteEmailAliasHandler == nil {
+		unregistered = append(unregistered, "email.DeleteEmailAliasHandler")
 	}
 	if o.Fail2banDeleteFail2banIPHandler == nil {
 		unregistered = append(unregistered, "fail2ban.DeleteFail2banIPHandler")
@@ -333,10 +349,18 @@ func (o *DmailserverRestAPIAPI) initHandlerCache() {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
 	o.handlers["POST"]["/email"] = email.NewAddEmailAccount(o.context, o.EmailAddEmailAccountHandler)
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/email/{emailAddress}/aliasses"] = email.NewAddEmailAlias(o.context, o.EmailAddEmailAliasHandler)
 	if o.handlers["DELETE"] == nil {
 		o.handlers["DELETE"] = make(map[string]http.Handler)
 	}
 	o.handlers["DELETE"]["/email/{emailAddress}"] = email.NewDeleteEmailAccount(o.context, o.EmailDeleteEmailAccountHandler)
+	if o.handlers["DELETE"] == nil {
+		o.handlers["DELETE"] = make(map[string]http.Handler)
+	}
+	o.handlers["DELETE"]["/email/{emailAddress}/aliasses"] = email.NewDeleteEmailAlias(o.context, o.EmailDeleteEmailAliasHandler)
 	if o.handlers["DELETE"] == nil {
 		o.handlers["DELETE"] = make(map[string]http.Handler)
 	}

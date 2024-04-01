@@ -146,4 +146,26 @@ func SetupController(api *operations.DmailserverRestAPIAPI, sr repo.SetupRepo) {
 		slog.Info("[DELETE] /fail2ban", "error", false, "success", true, "exists", true, "ip", pfi.Ipaddress)
 		return fail2ban.NewPostFail2banIPOK()
 	})
+
+	api.EmailAddEmailAliasHandler = email.AddEmailAliasHandlerFunc(func(aeap email.AddEmailAliasParams, i interface{}) middleware.Responder {
+		err := sr.AddAlias(aeap.Alias, aeap.EmailAddress)
+		if err != nil {
+			slog.Info("[POST] /email/{emailAddress}/aliasses", "error", true, "errorMessage", err, "success", false, "alias", aeap.Alias, "emailAddress", aeap.EmailAddress)
+			return email.NewAddEmailAliasInternalServerError()
+		}
+
+		slog.Info("[POST] /email/{emailAddress}/aliasses", "error", false, "success", true, "alias", aeap.Alias, "emailAddress", aeap.EmailAddress)
+		return email.NewAddEmailAliasOK()
+	})
+
+	api.EmailDeleteEmailAliasHandler = email.DeleteEmailAliasHandlerFunc(func(deap email.DeleteEmailAliasParams, i interface{}) middleware.Responder {
+		err := sr.RemoveAlias(deap.Alias, deap.EmailAddress)
+		if err != nil {
+			slog.Info("[DELETE] /email/{emailAddress}/aliasses", "error", true, "errorMessage", err, "success", false, "alias", deap.Alias, "emailAddress", deap.EmailAddress)
+			return email.NewAddEmailAliasInternalServerError()
+		}
+
+		slog.Info("[DELETE] /email/{emailAddress}/aliasses", "error", false, "success", true, "alias", deap.Alias, "emailAddress", deap.EmailAddress)
+		return email.NewDeleteEmailAliasOK()
+	})
 }

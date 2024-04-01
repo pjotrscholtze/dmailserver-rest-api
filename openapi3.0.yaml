@@ -91,6 +91,68 @@ paths:
           description: Internal error
       security:
         - api_key: []
+  /email/{emailAddress}/aliasses:
+    post:
+      tags:
+      - email
+      - alias
+      operationId: addEmailAlias
+      parameters:
+      - name: emailAddress
+        in: path
+        description: Address of the email account to point the alias to.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Alias to add to the email account
+        content:
+          application/json:
+            schema:
+              type: string
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+        '405':
+          description: Invalid input
+        '406':
+          description: Email alias already exists!
+        '500':
+          description: Internal error
+      security:
+        - api_key: []
+    delete:
+      tags:
+      - email
+      - alias
+      operationId: deleteEmailAlias
+      parameters:
+      - name: emailAddress
+        in: path
+        description: Address of the email account to delete the alias from
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Alias to remove from the email account
+        content:
+          application/json:
+            schema:
+              type: string
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: Account or alias not found
+        '405':
+          description: Invalid input
+        '500':
+          description: Internal error
+      security:
+        - api_key: []
+
   # /email/{emailAddress}/quota:
   #   get:
   #     operationId: getQuotaOfEmailAccount

@@ -185,6 +185,102 @@ func init() {
         }
       }
     },
+    "/email/{emailAddress}/aliasses": {
+      "post": {
+        "security": [
+          {
+            "api_key": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "email",
+          "alias"
+        ],
+        "operationId": "addEmailAlias",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Address of the email account to point the alias to.",
+            "name": "emailAddress",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Alias to add to the email account",
+            "name": "alias",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          },
+          "405": {
+            "description": "Invalid input"
+          },
+          "406": {
+            "description": "Email alias already exists!"
+          },
+          "500": {
+            "description": "Internal error"
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "api_key": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "email",
+          "alias"
+        ],
+        "operationId": "deleteEmailAlias",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Address of the email account to delete the alias from",
+            "name": "emailAddress",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Alias to remove from the email account",
+            "name": "alias",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          },
+          "404": {
+            "description": "Account or alias not found"
+          },
+          "405": {
+            "description": "Invalid input"
+          },
+          "500": {
+            "description": "Internal error"
+          }
+        }
+      }
+    },
     "/fail2ban": {
       "get": {
         "security": [
@@ -526,6 +622,102 @@ func init() {
           },
           "404": {
             "description": "Account not found"
+          },
+          "405": {
+            "description": "Invalid input"
+          },
+          "500": {
+            "description": "Internal error"
+          }
+        }
+      }
+    },
+    "/email/{emailAddress}/aliasses": {
+      "post": {
+        "security": [
+          {
+            "api_key": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "email",
+          "alias"
+        ],
+        "operationId": "addEmailAlias",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Address of the email account to point the alias to.",
+            "name": "emailAddress",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Alias to add to the email account",
+            "name": "alias",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          },
+          "405": {
+            "description": "Invalid input"
+          },
+          "406": {
+            "description": "Email alias already exists!"
+          },
+          "500": {
+            "description": "Internal error"
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "api_key": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "email",
+          "alias"
+        ],
+        "operationId": "deleteEmailAlias",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Address of the email account to delete the alias from",
+            "name": "emailAddress",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Alias to remove from the email account",
+            "name": "alias",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          },
+          "404": {
+            "description": "Account or alias not found"
           },
           "405": {
             "description": "Invalid input"
