@@ -310,6 +310,10 @@ definitions:
   Fail2banListItem:
     type: object
     properties:
+      bannedInCustom:
+        type: array
+        items:
+          type: string
       bannedInDovecot:
         type: array
         items:

@@ -17,6 +17,9 @@ import (
 // swagger:model Fail2banListItem
 type Fail2banListItem struct {
 
+	// banned in custom
+	BannedInCustom []string `json:"bannedInCustom"`
+
 	// banned in dovecot
 	BannedInDovecot []string `json:"bannedInDovecot"`
 

@@ -233,10 +233,17 @@ func (sr *setupRepo) ListFail2ban() (models.Fail2banListItem, error) {
 	}
 
 	for _, line := range strings.Split(string(t), "\n") {
-		cleaned := line[11:]
+		if len(line) < 10 {
+			continue
+		}
+		cleaned := line[10:]
 		if cleaned[:7] == "postfix" {
 			ips := strings.Split(cleaned[9:], " ")
 			out.BannedInPostfix = ips
+		}
+		if cleaned[:6] == "custom" {
+			ips := strings.Split(cleaned[8:], " ")
+			out.BannedInCustom = ips
 		}
 	}
 
@@ -299,6 +306,11 @@ func (sr *setupRepo) HasFail2banIp(ip string) (bool, error) {
 	}
 
 	for _, currentIp := range bans.BannedInPostfixSasl {
+		if currentIp == ip {
+			return true, nil
+		}
+	}
+	for _, currentIp := range bans.BannedInCustom {
 		if currentIp == ip {
 			return true, nil
 		}

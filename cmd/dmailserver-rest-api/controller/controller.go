@@ -128,22 +128,22 @@ func SetupController(api *operations.DmailserverRestAPIAPI, sr repo.SetupRepo) {
 	api.Fail2banPostFail2banIPHandler = fail2ban.PostFail2banIPHandlerFunc(func(pfi fail2ban.PostFail2banIPParams, i interface{}) middleware.Responder {
 		has, err := sr.HasFail2banIp(pfi.Ipaddress)
 		if has {
-			slog.Info("[DELETE] /fail2ban", "error", true, "errorMessage", err, "success", false, "exists", false, "ip", pfi.Ipaddress)
+			slog.Info("[POST] /fail2ban", "error", true, "errorMessage", err, "success", false, "exists", false, "ip", pfi.Ipaddress)
 			return fail2ban.NewPostFail2banIPOK()
 		}
 
 		if err != nil {
-			slog.Info("[DELETE] /fail2ban", "error", true, "errorMessage", err, "success", false, "exists", true, "ip", pfi.Ipaddress)
+			slog.Info("[POST] /fail2ban", "error", true, "errorMessage", err, "success", false, "exists", true, "ip", pfi.Ipaddress)
 			return fail2ban.NewPostFail2banIPInternalServerError()
 		}
 
-		err = sr.RemoveFail2ban(pfi.Ipaddress)
+		err = sr.AddFail2ban(pfi.Ipaddress)
 		if err != nil {
-			slog.Info("[DELETE] /fail2ban", "error", true, "errorMessage", err, "success", false, "exists", true, "ip", pfi.Ipaddress)
+			slog.Info("[POST] /fail2ban", "error", true, "errorMessage", err, "success", false, "exists", true, "ip", pfi.Ipaddress)
 			return fail2ban.NewPostFail2banIPInternalServerError()
 		}
 
-		slog.Info("[DELETE] /fail2ban", "error", false, "success", true, "exists", true, "ip", pfi.Ipaddress)
+		slog.Info("[POST] /fail2ban", "error", false, "success", true, "exists", true, "ip", pfi.Ipaddress)
 		return fail2ban.NewPostFail2banIPOK()
 	})
 
