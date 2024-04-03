@@ -34,7 +34,6 @@ func main() {
 
 	slog.Info("Setting command prefix", "commandPrefix", config.ServerConfig.CommandPrefix)
 	sr := repo.NewSetupRepo(config.ServerConfig.CommandPrefix)
-	sr.ListEmail()
 
 	swaggerSpec, err := loads.Embedded(restapi.SwaggerJSON, restapi.FlatSwaggerJSON)
 	if err != nil {
